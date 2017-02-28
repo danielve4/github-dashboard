@@ -8,7 +8,7 @@
     headers: {
       'Accept': 'application/vnd.github.v3+json',
       'User-Agent': 'danielve4',
-      'Authorization':'token 79d0937c5d9f7bfa769610a8984cb86427ee033e'
+      'Authorization':'token '
     }
   };
 
