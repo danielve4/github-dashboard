@@ -1,5 +1,13 @@
 (function() {
-  var options = {
+  var sortBy = 'openIssues';
+  var displayOnly = {
+    'openIssues':true,
+    'watchers':true,
+    'forks':true,
+    'commits':true
+  };
+
+  var requestOptions = {
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json',
@@ -8,12 +16,11 @@
     }
   };
 
-  var reposInfo = [];
-
+  var reposInfo;
   var stats = 'stats-json-ex.json';
   var repo = 'repo-json-ex.json';
 
-  function loadRepoInfo() {
+  function loadRepoInfo(stats, repo, callback) {
     var readyCount = 0;
     var info = {
       'openIssues':'',
@@ -28,16 +35,18 @@
       readyCount++;
       if(readyCount===2) {
         reposInfo.push(info);
-        addRepoInfo();
+        sort();
+        callback();
       }
     });
     getRepoStats(stats, function (json) {
-      var sumCommits = json.all.reduce(function (a, b) {return a+b},0);
+      var sumCommits = json.all.reduce(function(a, b){return a+b},0);
       info.commits = sumCommits;
       readyCount++;
       if(readyCount===2) {
         reposInfo.push(info);
-        addRepoInfo();
+        sort();
+        callback();
       }
     });
   }
@@ -45,35 +54,70 @@
   function addRepoInfo() {
     var mainUl = document.querySelector('#all-repos-info');
 
-    var mainUlLi = document.createElement('li');
-    mainUl.appendChild(mainUlLi);
-    var ulStats = document.createElement('ul');
-    ulStats.className = 'card';
-
-    var openIssuesCount = document.createElement('li');
-    var watchersCount = document.createElement('li');
-    var forksCount = document.createElement('li');
-    var commitCount = document.createElement('li');
-
-    openIssuesCount.innerHTML = 'Open Issues: '+reposInfo[0].openIssues;
-    ulStats.appendChild(openIssuesCount);
-    watchersCount.innerHTML = 'Watchers: '+reposInfo[0].watchers;
-    ulStats.appendChild(watchersCount);
-    forksCount.innerHTML = 'Forks: '+reposInfo[0].forks;
-    ulStats.appendChild(forksCount);
-    commitCount.innerHTML = 'Commits: '+reposInfo[0].commits;
-    ulStats.appendChild(commitCount);
-
-    mainUlLi.appendChild(ulStats);
+    for(var i=0;i<reposInfo.length ;i++) {
+      var mainUlLi = document.createElement('li');
+      mainUl.appendChild(mainUlLi);
+      var ulStats = document.createElement('ul');
+      ulStats.className = 'card';
+      if (displayOnly.openIssues === true) {
+        var openIssuesCount = document.createElement('li');
+        openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].openIssues;
+        ulStats.appendChild(openIssuesCount);
+      }
+      if (displayOnly.watchers === true) {
+        var watchersCount = document.createElement('li');
+        watchersCount.innerHTML = 'Watchers: ' + reposInfo[i].watchers;
+        ulStats.appendChild(watchersCount);
+      }
+      if (displayOnly.forks === true) {
+        var forksCount = document.createElement('li');
+        forksCount.innerHTML = 'Forks: ' + reposInfo[i].forks;
+        ulStats.appendChild(forksCount);
+      }
+      if (displayOnly.commits === true) {
+        var commitCount = document.createElement('li');
+        commitCount.innerHTML = 'Commits: ' + reposInfo[i].commits;
+        ulStats.appendChild(commitCount);
+      }
+      mainUlLi.appendChild(ulStats);
+    }
   }
-  loadRepoInfo();
+
+  function loadAndDisplay() {
+    reposInfo = [];
+    document.querySelector('#all-repos-info').innerHTML = '';
+    var infoComplete = 0;
+    for (var j = 0; j < 5; j++) {
+      loadRepoInfo(stats, repo, function () {
+        infoComplete++;
+        if (infoComplete === 5) {
+          addRepoInfo();
+        }
+      });
+    }
+  }
+
+
+  function sort() {
+    reposInfo.sort(function(a, b) {
+      return parseFloat(a[sortBy]) - parseFloat(b[sortBy]);
+    });
+  }
+
+  for(var i=0;i<2;i++) {
+    (function(i){
+      window.setTimeout(function(){
+        loadAndDisplay();
+      }, i * 2000);
+    }(i));
+  }
 
 
 
 
 
   function getRepoInfo(repoUrl, callback) {
-    var repoRequest = new Request(repoUrl, options);
+    var repoRequest = new Request(repoUrl, requestOptions);
     fetch(repoRequest)
       .then(function(response) {
         return response.json();
@@ -84,7 +128,7 @@
   }
 
   function getRepoStats(repoUrl, callback) {
-    var repoRequest = new Request(repoUrl, options);
+    var repoRequest = new Request(repoUrl, requestOptions);
     fetch(repoRequest)
       .then(function(response) {
         if(response.status === 200) {
@@ -139,13 +183,5 @@
       addRepoInfoToDoc(repo, stats);
     }
   }
-
-  // for(var i=0;i<2;i++) {
-  //   (function(i){
-  //     window.setTimeout(function(){
-  //       addAllInfoToDoc()
-  //     }, i * 2000);
-  //   }(i));
-  // }
 
 })();
