@@ -1,7 +1,3 @@
-// $.noConflict();
-// jQuery(function($) {
-// });
-
 (function() {
   var options = {
     method: 'GET',
@@ -39,10 +35,6 @@
       });
   }
 
-  // var openIssuesCount = document.querySelector('#open-issues-count');
-  // var watchersCount = document.querySelector('#watchers-count');
-  // var forksCount = document.querySelector('#forks-count');
-  // var commitCount = document.querySelector('#commits-count');
   function addRepoInfoToDoc(repoUrl, statsUrl) {
     var mainUl = document.querySelector('#all-repos-info');
 
@@ -65,7 +57,7 @@
       ulStats.appendChild(forksCount);
       console.log(json);
     });
-    getRepoInfo(statsUrl,function (json) {
+    getRepoInfo(statsUrl, function (json) {
       var sumCommits = json.all.reduce(function (a, b) {return a+b},0);
       commitCount.innerHTML = 'Commits: '+sumCommits;
       ulStats.appendChild(commitCount);
@@ -79,7 +71,7 @@
     var repo = 'repo-json-ex.json';
     document.querySelector('#all-repos-info').innerHTML = '';
 
-    for(var j=0;j<2;j++) {
+    for(var j=0;j<4;j++) {
       addRepoInfoToDoc(repo, stats);
     }
   }
