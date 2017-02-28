@@ -9,3 +9,62 @@ a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,c
 /*
 http://www.modularscale.com/?22&px&1.125&web&text
 */
+
+html {
+  font-size: 1.125em;     /*18px / 16px = 1.125em*/
+  line-height: 1.222em;   /*22px is 1 gridline at 18px | 22px / 18px = 1.222em*/
+  background-color: #EDEDED;
+  color: #001A26;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 500;
+}
+
+.card {
+  margin-top: 0.61111111em; /*11px / 18px = 0.611111em*/
+  border-radius: 0.18181818em; /*2px / 11px = 0.18181818em*/
+  box-shadow: 0 0.36363636em 0.7272727em rgba(0,0,0,0.26);/*The shadow of the navigation bar 4px down, 8px blur radius*/
+  padding: 1.222222em; /*22px / 18px = 1.2222em*/
+  background-color: #F9F9F9;
+}
+
+#page {
+  padding: 0.611111111em; /*half gridline*/
+}
+
+
+/* 480px @ 16px/em*/
+@media screen and (min-width: 30em) {
+
+  #page {
+    padding-left: 3.33333%;
+    padding-right: 3.33333%;
+  }
+}
+
+/* 600px @ 16px/em*/
+/* Based on an 8 column grid with 16px gutters*/
+@media screen and (min-width: 37.5em) {
+
+  #page {
+    padding-left: 2.66667%;
+    padding-right: 2.66667%;
+  }
+}
+
+/* 840px @ 16px/em*/
+/* Based on a 12 column grid with 24px gutters*/
+@media screen and (min-width: 52.5em) {
+  #page {
+    padding-left: 19.04762%;
+    padding-right: 19.04762%;
+  }
+}
+
+/* 1440px @ 16px/em*/
+/* Based on a 12 column grid with 24px gutters*/
+@media screen and (min-width: 90em) {
+  #page {
+    padding-left: 26.25%;
+    padding-right: 26.25%;
+  }
+}
