@@ -8,6 +8,70 @@
     }
   };
 
+  var reposInfo = [];
+
+  var stats = 'stats-json-ex.json';
+  var repo = 'repo-json-ex.json';
+
+  function loadRepoInfo() {
+    var readyCount = 0;
+    var info = {
+      'openIssues':'',
+      'watchers':'',
+      'forks':'',
+      'commits':''
+    };
+    getRepoInfo(repo, function (json) {
+      info.openIssues = json.open_issues_count;
+      info.watchers = json.subscribers_count;
+      info.forks = json.forks_count;
+      readyCount++;
+      if(readyCount===2) {
+        reposInfo.push(info);
+        addRepoInfo();
+      }
+    });
+    getRepoStats(stats, function (json) {
+      var sumCommits = json.all.reduce(function (a, b) {return a+b},0);
+      info.commits = sumCommits;
+      readyCount++;
+      if(readyCount===2) {
+        reposInfo.push(info);
+        addRepoInfo();
+      }
+    });
+  }
+
+  function addRepoInfo() {
+    var mainUl = document.querySelector('#all-repos-info');
+
+    var mainUlLi = document.createElement('li');
+    mainUl.appendChild(mainUlLi);
+    var ulStats = document.createElement('ul');
+    ulStats.className = 'card';
+
+    var openIssuesCount = document.createElement('li');
+    var watchersCount = document.createElement('li');
+    var forksCount = document.createElement('li');
+    var commitCount = document.createElement('li');
+
+    openIssuesCount.innerHTML = 'Open Issues: '+reposInfo[0].openIssues;
+    ulStats.appendChild(openIssuesCount);
+    watchersCount.innerHTML = 'Watchers: '+reposInfo[0].watchers;
+    ulStats.appendChild(watchersCount);
+    forksCount.innerHTML = 'Forks: '+reposInfo[0].forks;
+    ulStats.appendChild(forksCount);
+    commitCount.innerHTML = 'Commits: '+reposInfo[0].commits;
+    ulStats.appendChild(commitCount);
+
+    mainUlLi.appendChild(ulStats);
+  }
+  loadRepoInfo();
+
+
+
+
+
   function getRepoInfo(repoUrl, callback) {
     var repoRequest = new Request(repoUrl, options);
     fetch(repoRequest)
@@ -57,7 +121,7 @@
       ulStats.appendChild(forksCount);
       console.log(json);
     });
-    getRepoInfo(statsUrl, function (json) {
+    getRepoStats(statsUrl, function (json) {
       var sumCommits = json.all.reduce(function (a, b) {return a+b},0);
       commitCount.innerHTML = 'Commits: '+sumCommits;
       ulStats.appendChild(commitCount);
@@ -76,12 +140,12 @@
     }
   }
 
-  for(var i=0;i<2;i++) {
-    (function(i){
-      window.setTimeout(function(){
-        addAllInfoToDoc()
-      }, i * 2000);
-    }(i));
-  }
+  // for(var i=0;i<2;i++) {
+  //   (function(i){
+  //     window.setTimeout(function(){
+  //       addAllInfoToDoc()
+  //     }, i * 2000);
+  //   }(i));
+  // }
 
 })();
