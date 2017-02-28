@@ -45,6 +45,7 @@
   // var commitCount = document.querySelector('#commits-count');
   function addRepoInfoToDoc(repoUrl, statsUrl) {
     var mainUl = document.querySelector('#all-repos-info');
+
     var mainUlLi = document.createElement('li');
     mainUl.appendChild(mainUlLi);
     var ulStats = document.createElement('ul');
@@ -76,15 +77,18 @@
   function addAllInfoToDoc() {
     var stats = 'stats-json-ex.json';
     var repo = 'repo-json-ex.json';
+    document.querySelector('#all-repos-info').innerHTML = '';
 
-    addRepoInfoToDoc(repo, stats);
+    for(var j=0;j<2;j++) {
+      addRepoInfoToDoc(repo, stats);
+    }
   }
 
   for(var i=0;i<2;i++) {
     (function(i){
       window.setTimeout(function(){
         addAllInfoToDoc()
-      }, i * 5000);
+      }, i * 2000);
     }(i));
   }
 
