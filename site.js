@@ -33,6 +33,14 @@
 
   sortSelect.addEventListener('change', addRepoInfo, false);
 
+  for(var i=0;i<1;i++) {
+    (function(i){
+      window.setTimeout(function(){
+        loadAndDisplay();
+      }, i * 5000);
+    }(i));
+  }
+
   for (var c=0; c<statsCheckBoxes.length; c++) {
     statsCheckBoxes[c].onclick = function() {
       if(this.checked) {
@@ -41,6 +49,20 @@
         statsDisplayOptions[this.value] = false;
       }
       addRepoInfo();
+    }
+  }
+
+  function loadAndDisplay() {
+    reposInfo = [];
+    var infoComplete = 0;
+    for (var j = 0; j < repositories.length; j++) {
+      loadRepoInfo(repositories[j], function () {
+        infoComplete++;
+        if (infoComplete === repositories.length) {
+          addRepoInfo();
+          reposDisplaySet = true;
+        }
+      });
     }
   }
 
@@ -119,20 +141,6 @@
     console.log(reposInfo);
   }
 
-  function loadAndDisplay() {
-    reposInfo = [];
-    var infoComplete = 0;
-    for (var j = 0; j < repositories.length; j++) {
-      loadRepoInfo(repositories[j], function () {
-        infoComplete++;
-        if (infoComplete === repositories.length) {
-          addRepoInfo();
-          reposDisplaySet = true;
-        }
-      });
-    }
-  }
-
   function sort() {
     sortBy = sortSelect.value;
     reposInfo.sort(function(a, b) {
@@ -140,20 +148,13 @@
     });
   }
 
-  for(var i=0;i<1;i++) {
-    (function(i){
-      window.setTimeout(function(){
-        loadAndDisplay();
-      }, i * 5000);
-    }(i));
-  }
-
   function addReposCheckBoxes(repoName) {
     reposDisplayOptions[repoName] = true;
+    var repoLi = document.createElement('li');
     var repoLabel = document.createElement('label');
     repoLabel.setAttribute('for',repoName+'-check');
     repoLabel.innerHTML = repoName;
-    filterRepos.appendChild(repoLabel);
+    repoLi.appendChild(repoLabel);
     var repoCheck = document.createElement('input');
     repoCheck.setAttribute('type','checkbox');
     repoCheck.setAttribute('id',repoName+'-check');
@@ -163,7 +164,8 @@
       reposDisplayOptions[this.value] = this.checked;
       addRepoInfo();
     };
-    filterRepos.appendChild(repoCheck);
+    repoLi.appendChild(repoCheck);
+    filterRepos.appendChild(repoLi);
   }
 
   function getRepoInfo(repoUrl, callback) {
