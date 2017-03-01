@@ -21,22 +21,36 @@
         <option value="commits">Commits</option>
       </select>
     </section>
-    <section id="filter-stats-by">
+    <section>
       <label>Filter by Stat: </label>
-      <label for="issues-check">issues</label>
-      <input type="checkbox" id="issues-check" value="issues" checked="checked">
-      <label for="watchers-check">watchers</label>
-      <input type="checkbox" id="watchers-check" value="watchers" checked="checked">
-      <label for="forks-check">forks</label>
-      <input type="checkbox" id="forks-check" value="forks" checked="checked">
-      <label for="commits-check">commits</label>
-      <input type="checkbox" id="commits-check" value="commits" checked="checked">
+      <ul id="filter-stats-by">
+        <li>
+          <label for="issues-check">Open Issues</label>
+          <input type="checkbox" id="issues-check" value="issues" checked="checked">
+        </li>
+        <li>
+          <label for="watchers-check">Watchers</label>
+          <input type="checkbox" id="watchers-check" value="watchers" checked="checked">
+        </li>
+        <li>
+          <label for="forks-check">Forks</label>
+          <input type="checkbox" id="forks-check" value="forks" checked="checked">
+        </li>
+        <li>
+          <label for="commits-check">Commits</label>
+          <input type="checkbox" id="commits-check" value="commits" checked="checked">
+        </li>
+      </ul>
     </section>
-    <section id="filter-repos-by">
+    <section>
       <label>Filter by Repository: </label>
+      <ul id="filter-repos-by">
+      </ul>
     </section>
-    <ul id="all-repos-info">
-    </ul>
+    <section>
+      <ul id="all-repos-info">
+      </ul>
+    </section>
   </main>
   <footer class="footer">
   </footer>
