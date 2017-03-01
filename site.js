@@ -1,11 +1,34 @@
 (function() {
   var repositories = [
-    // 'facebook/react',
-    // 'angular/angular.js',
-    // 'emberjs/ember.js',
+    'facebook/react',
+    'angular/angular.js',
+    'emberjs/ember.js',
     'vuejs/vue'
   ];
   var sortSelect = document.getElementById('sort-select');
+  var filterStatsBy = document.getElementById('filter-stats-by');
+  var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');
+  var filterRepos = document.getElementById('filter-repos-by');
+  var reposDisplayOptions = {};
+
+  function addReposCheckBoxes(repoName) {
+    reposDisplayOptions[repoName] = true;
+    var repoLabel = document.createElement('label');
+    repoLabel.setAttribute('for',repoName+'-check');
+    repoLabel.innerHTML = repoName;
+    filterRepos.appendChild(repoLabel);
+    var repoCheck = document.createElement('input');
+    repoCheck.setAttribute('type','checkbox');
+    repoCheck.setAttribute('id',repoName+'-check');
+    repoCheck.setAttribute('value',repoName);
+    repoCheck.setAttribute('checked','checked');
+    repoCheck.onclick = function() {
+      reposDisplayOptions[this.value] = this.checked;
+      addRepoInfo();
+    };
+    filterRepos.appendChild(repoCheck);
+  }
+
   var statsDisplayOptions = {
     'issues':true,
     'watchers':true,
@@ -40,6 +63,7 @@
       info.issues = json.open_issues_count;
       info.watchers = json.subscribers_count;
       info.forks = json.forks_count;
+      addReposCheckBoxes(json.name);
       readyCount++;
       if(readyCount===2) {
         reposInfo.push(info);
@@ -61,36 +85,37 @@
     sort();
     document.querySelector('#all-repos-info').innerHTML = '';
     var mainUl = document.querySelector('#all-repos-info');
-
     for(var i=0;i<reposInfo.length ;i++) {
-      var mainUlLi = document.createElement('li');
-      mainUl.appendChild(mainUlLi);
-      var ulStats = document.createElement('ul');
-      ulStats.className = 'card';
-      var repoName = document.createElement('h2');
-      repoName.innerHTML = reposInfo[i].name;
-      ulStats.appendChild(repoName);
-      if (statsDisplayOptions.issues === true) {
-        var openIssuesCount = document.createElement('li');
-        openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].issues;
-        ulStats.appendChild(openIssuesCount);
+      if(reposDisplayOptions[reposInfo[i].name]) {
+        var mainUlLi = document.createElement('li');
+        mainUl.appendChild(mainUlLi);
+        var ulStats = document.createElement('ul');
+        ulStats.className = 'card';
+        var repoName = document.createElement('h2');
+        repoName.innerHTML = reposInfo[i].name;
+        ulStats.appendChild(repoName);
+        if (statsDisplayOptions.issues === true) {
+          var openIssuesCount = document.createElement('li');
+          openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].issues;
+          ulStats.appendChild(openIssuesCount);
+        }
+        if (statsDisplayOptions.watchers === true) {
+          var watchersCount = document.createElement('li');
+          watchersCount.innerHTML = 'Watchers: ' + reposInfo[i].watchers;
+          ulStats.appendChild(watchersCount);
+        }
+        if (statsDisplayOptions.forks === true) {
+          var forksCount = document.createElement('li');
+          forksCount.innerHTML = 'Forks: ' + reposInfo[i].forks;
+          ulStats.appendChild(forksCount);
+        }
+        if (statsDisplayOptions.commits === true) {
+          var commitCount = document.createElement('li');
+          commitCount.innerHTML = 'Commits: ' + reposInfo[i].commits;
+          ulStats.appendChild(commitCount);
+        }
+        mainUlLi.appendChild(ulStats);
       }
-      if (statsDisplayOptions.watchers === true) {
-        var watchersCount = document.createElement('li');
-        watchersCount.innerHTML = 'Watchers: ' + reposInfo[i].watchers;
-        ulStats.appendChild(watchersCount);
-      }
-      if (statsDisplayOptions.forks === true) {
-        var forksCount = document.createElement('li');
-        forksCount.innerHTML = 'Forks: ' + reposInfo[i].forks;
-        ulStats.appendChild(forksCount);
-      }
-      if (statsDisplayOptions.commits === true) {
-        var commitCount = document.createElement('li');
-        commitCount.innerHTML = 'Commits: ' + reposInfo[i].commits;
-        ulStats.appendChild(commitCount);
-      }
-      mainUlLi.appendChild(ulStats);
     }
     console.log('Reloaded: ' + sortBy);
     console.log(reposInfo);
@@ -117,7 +142,7 @@
     });
   }
 
-  for(var i=0;i<0;i++) {
+  for(var i=0;i<1;i++) {
     (function(i){
       window.setTimeout(function(){
         loadAndDisplay();
@@ -126,8 +151,6 @@
   }
 
   sortSelect.addEventListener('change', addRepoInfo, false);
-  var filterStatsBy = document.getElementById('filter-stats-by');
-  var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');
 
   for (var c=0; c<statsCheckBoxes.length; c++) {
     statsCheckBoxes[c].onclick = function() {
