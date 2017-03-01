@@ -1,7 +1,8 @@
 (function() {
-  var sortBy = 'openIssues';
+  var sortSelect = document.getElementById('sort-select');
+  var sortBy;
   var displayOnly = {
-    'openIssues':true,
+    'issues':true,
     'watchers':true,
     'forks':true,
     'commits':true
@@ -23,7 +24,7 @@
   function loadRepoInfo(stats, repo, callback) {
     var readyCount = 0;
     var info = {
-      'openIssues':'',
+      'issues':'',
       'watchers':'',
       'forks':'',
       'commits':''
@@ -52,6 +53,8 @@
   }
 
   function addRepoInfo() {
+    sort();
+    document.querySelector('#all-repos-info').innerHTML = '';
     var mainUl = document.querySelector('#all-repos-info');
 
     for(var i=0;i<reposInfo.length ;i++) {
@@ -59,9 +62,9 @@
       mainUl.appendChild(mainUlLi);
       var ulStats = document.createElement('ul');
       ulStats.className = 'card';
-      if (displayOnly.openIssues === true) {
+      if (displayOnly.issues === true) {
         var openIssuesCount = document.createElement('li');
-        openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].openIssues;
+        openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].issues;
         ulStats.appendChild(openIssuesCount);
       }
       if (displayOnly.watchers === true) {
@@ -81,16 +84,16 @@
       }
       mainUlLi.appendChild(ulStats);
     }
+    console.log('Reloaded: ' + sortBy);
   }
 
   function loadAndDisplay() {
     reposInfo = [];
-    document.querySelector('#all-repos-info').innerHTML = '';
     var infoComplete = 0;
-    for (var j = 0; j < 5; j++) {
+    for (var j = 0; j < 4; j++) {
       loadRepoInfo(stats, repo, function () {
         infoComplete++;
-        if (infoComplete === 5) {
+        if (infoComplete === 4) {
           addRepoInfo();
         }
       });
@@ -99,6 +102,7 @@
 
 
   function sort() {
+    sortBy = sortSelect.value;
     reposInfo.sort(function(a, b) {
       return parseFloat(a[sortBy]) - parseFloat(b[sortBy]);
     });
@@ -108,9 +112,11 @@
     (function(i){
       window.setTimeout(function(){
         loadAndDisplay();
-      }, i * 2000);
+      }, i * 1000);
     }(i));
   }
+
+  sortSelect.addEventListener('change', addRepoInfo, false);
 
 
 
