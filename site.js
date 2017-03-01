@@ -1,22 +1,23 @@
 (function() {
+  var reposInfo; //Stores all information of the repositories
+  var sortBy;
   var refreshInteval = 30; //In minutes
-  var repositories = [
-    // 'facebook/react',
-    // 'angular/angular.js',
-    // 'emberjs/ember.js',
+  var repositories = [ //To add more repositories, just add their path here
+    'facebook/react',
+    'angular/angular.js',
+    'emberjs/ember.js',
     'vuejs/vue'
   ];
-  var sortSelect = document.getElementById('sort-select');
-  var filterStatsBy = document.getElementById('filter-stats-by');
-  var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');
-  var filterRepos = document.getElementById('filter-repos-by');
-  var reposDisplayOptions = {};
-  var reposDisplaySet = false;
+  var sortSelect = document.getElementById('sort-select'); //The sort by drop-down menu
+  var filterStatsBy = document.getElementById('filter-stats-by'); //Where filter by stat checkboxes are
+  var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');//Get all checkboxes
+  var filterRepos = document.getElementById('filter-repos-by');//Where filter by repos checkboxes are
+  var reposDisplayOptions = {}; //Stores what repos to display
+  var reposDisplaySet = false; //Flag to check if the display options have been set
 
-  var statsDisplayOptions = {
+  var statsDisplayOptions = { //What stats to display
     'issues':true,
     'watchers':true,
-    'forks':true,
     'commits':true
   };
 
@@ -26,33 +27,24 @@
       'Accept': 'application/vnd.github.v3+json'
     }
   };
-
-  var reposInfo;
-  var sortBy;
-
+  //Listens for change in sorting option
   sortSelect.addEventListener('change', addRepoInfo, false);
 
-  for(var i=0;i<1;i++) {
-    (function(i){
-      window.setTimeout(function(){
-        loadAndDisplay();
-        var date = new Date();
-        document.getElementById('time-updated').innerHTML = date.getHours()+':'+date.getMinutes();
-      }, i * (1000 * 60 * refreshInteval ));
-    }(i));
-  }
+  //Updates the stats at set interval, infinite loop
+  loadAndDisplay();
 
+  var interval = setInterval(function(){
+      loadAndDisplay();
+    },(1000*60*refreshInteval));
+
+  //Adds event listeners to stats checkboxes
   for (var c=0; c<statsCheckBoxes.length; c++) {
     statsCheckBoxes[c].onclick = function() {
-      if(this.checked) {
-        statsDisplayOptions[this.value] = true;
-      } else {
-        statsDisplayOptions[this.value] = false;
-      }
+      statsDisplayOptions[this.value] = this.checked;
       addRepoInfo();
     }
   }
-
+  //Function that calls functions to load data and displays it
   function loadAndDisplay() {
     reposInfo = [];
     var infoComplete = 0;
@@ -61,12 +53,14 @@
         infoComplete++;
         if (infoComplete === repositories.length) {
           addRepoInfo();
+          var date = new Date();
+          document.getElementById('time-updated').innerHTML = date.getHours()+':'+date.getMinutes();
           reposDisplaySet = true;
         }
       });
     }
   }
-
+  //Gets the data from their respective urls
   function loadRepoInfo(repoPath, callback) {
     var repoUrl = 'http://api.github.com/repos/'+repoPath;
     var readyCount = 0;
@@ -74,14 +68,12 @@
       'name':'',
       'issues':'',
       'watchers':'',
-      'forks':'',
       'commits':''
     };
     getRepoInfo(repoUrl, function (json) {
       info.name = json.name;
       info.issues = json.open_issues_count;
       info.watchers = json.subscribers_count;
-      info.forks = json.forks_count;
       if(!reposDisplaySet) {
         addReposCheckBoxes(json.name);
       }
@@ -102,13 +94,14 @@
     });
   }
 
+  //Adds the repos information to the DOM
   function addRepoInfo() {
     sort();
-    document.querySelector('#all-repos-info').innerHTML = '';
     var mainUl = document.querySelector('#all-repos-info');
-    var rankNum = 1;
+    mainUl.innerHTML = ''; //Clear what is already there before adding anything
+    var rankNum = 1; //Rank of the repos depending on sorting preference
     for(var i=0;i<reposInfo.length ;i++) {
-      if(reposDisplayOptions[reposInfo[i].name]) {
+      if(reposDisplayOptions[reposInfo[i].name]) { //Only proceed if user wants to see the repo
         var mainUlLi = document.createElement('li');
         mainUlLi.className = 'card';
         mainUl.appendChild(mainUlLi);
@@ -118,6 +111,7 @@
         repoName.innerHTML = rankNum+'. '+reposInfo[i].name;
         rankNum++;
         ulStats.appendChild(repoName);
+        //Only add what user has selected to see
         if (statsDisplayOptions.issues === true) {
           var openIssuesCount = document.createElement('li');
           openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].issues;
@@ -127,11 +121,6 @@
           var watchersCount = document.createElement('li');
           watchersCount.innerHTML = 'Watchers: ' + reposInfo[i].watchers;
           ulStats.appendChild(watchersCount);
-        }
-        if (statsDisplayOptions.forks === true) {
-          var forksCount = document.createElement('li');
-          forksCount.innerHTML = 'Forks: ' + reposInfo[i].forks;
-          ulStats.appendChild(forksCount);
         }
         if (statsDisplayOptions.commits === true) {
           var commitCount = document.createElement('li');
@@ -144,14 +133,14 @@
     console.log('Reloaded: ' + sortBy);
     console.log(reposInfo);
   }
-
+  //Sorts the data based on user preference
   function sort() {
     sortBy = sortSelect.value;
     reposInfo.sort(function(a, b) {
       return parseFloat(b[sortBy]) - parseFloat(a[sortBy]);
     });
   }
-
+  //Adds the checkboxes to filter by repository
   function addReposCheckBoxes(repoName) {
     reposDisplayOptions[repoName] = true;
     var repoLi = document.createElement('li');
@@ -171,7 +160,7 @@
     repoLi.appendChild(repoLabel);
     filterRepos.appendChild(repoLi);
   }
-
+  //Gets the basic repository information
   function getRepoInfo(repoUrl, callback) {
     var repoRequest = new Request(repoUrl, requestOptions);
     fetch(repoRequest)
@@ -182,7 +171,7 @@
         callback(json);
       });
   }
-
+  //Gets repo statistics
   function getRepoStats(repoUrl, callback) {
     var repoRequest = new Request(repoUrl, requestOptions);
     fetch(repoRequest)
@@ -191,7 +180,7 @@
           response.json().then(function(json) {
             callback(json);
           });
-        } else if(response.status === 202) {
+        } else if(response.status === 202) { //Data might not be available yet, tries again after 3 seconds
           window.setTimeout(function () {
             getRepoStats(repoUrl, callback);
           }, 3000);
