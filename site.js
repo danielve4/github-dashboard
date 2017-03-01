@@ -10,24 +10,7 @@
   var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');
   var filterRepos = document.getElementById('filter-repos-by');
   var reposDisplayOptions = {};
-
-  function addReposCheckBoxes(repoName) {
-    reposDisplayOptions[repoName] = true;
-    var repoLabel = document.createElement('label');
-    repoLabel.setAttribute('for',repoName+'-check');
-    repoLabel.innerHTML = repoName;
-    filterRepos.appendChild(repoLabel);
-    var repoCheck = document.createElement('input');
-    repoCheck.setAttribute('type','checkbox');
-    repoCheck.setAttribute('id',repoName+'-check');
-    repoCheck.setAttribute('value',repoName);
-    repoCheck.setAttribute('checked','checked');
-    repoCheck.onclick = function() {
-      reposDisplayOptions[this.value] = this.checked;
-      addRepoInfo();
-    };
-    filterRepos.appendChild(repoCheck);
-  }
+  var reposDisplaySet = false;
 
   var statsDisplayOptions = {
     'issues':true,
@@ -48,6 +31,19 @@
   var reposInfo;
   var sortBy;
 
+  sortSelect.addEventListener('change', addRepoInfo, false);
+
+  for (var c=0; c<statsCheckBoxes.length; c++) {
+    statsCheckBoxes[c].onclick = function() {
+      if(this.checked) {
+        statsDisplayOptions[this.value] = true;
+      } else {
+        statsDisplayOptions[this.value] = false;
+      }
+      addRepoInfo();
+    }
+  }
+
   function loadRepoInfo(repoPath, callback) {
     var repoUrl = 'http://api.github.com/repos/'+repoPath;
     var readyCount = 0;
@@ -63,7 +59,9 @@
       info.issues = json.open_issues_count;
       info.watchers = json.subscribers_count;
       info.forks = json.forks_count;
-      addReposCheckBoxes(json.name);
+      if(!reposDisplaySet) {
+        addReposCheckBoxes(json.name);
+      }
       readyCount++;
       if(readyCount===2) {
         reposInfo.push(info);
@@ -129,11 +127,11 @@
         infoComplete++;
         if (infoComplete === repositories.length) {
           addRepoInfo();
+          reposDisplaySet = true;
         }
       });
     }
   }
-
 
   function sort() {
     sortBy = sortSelect.value;
@@ -150,17 +148,22 @@
     }(i));
   }
 
-  sortSelect.addEventListener('change', addRepoInfo, false);
-
-  for (var c=0; c<statsCheckBoxes.length; c++) {
-    statsCheckBoxes[c].onclick = function() {
-      if(this.checked) {
-        statsDisplayOptions[this.value] = true;
-      } else {
-        statsDisplayOptions[this.value] = false;
-      }
+  function addReposCheckBoxes(repoName) {
+    reposDisplayOptions[repoName] = true;
+    var repoLabel = document.createElement('label');
+    repoLabel.setAttribute('for',repoName+'-check');
+    repoLabel.innerHTML = repoName;
+    filterRepos.appendChild(repoLabel);
+    var repoCheck = document.createElement('input');
+    repoCheck.setAttribute('type','checkbox');
+    repoCheck.setAttribute('id',repoName+'-check');
+    repoCheck.setAttribute('value',repoName);
+    repoCheck.setAttribute('checked','checked');
+    repoCheck.onclick = function() {
+      reposDisplayOptions[this.value] = this.checked;
       addRepoInfo();
-    }
+    };
+    filterRepos.appendChild(repoCheck);
   }
 
   function getRepoInfo(repoUrl, callback) {
