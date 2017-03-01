@@ -12,13 +12,29 @@
     <h1>Github Dashboard</h1>
   </header>
   <main id="content">
-    <label for="sort-select">Sort By:</label>
-    <select name="sort-select" id="sort-select">
-      <option value="issues" selected>Open Issues</option>
-      <option value="watchers">Watchers</option>
-      <option value="forks">Forks</option>
-      <option value="commits">Commits</option>
-    </select>
+    <section id="sort-by">
+      <label for="sort-select">Sort By:</label>
+      <select name="sort-select" id="sort-select">
+        <option value="issues" selected>Open Issues</option>
+        <option value="watchers">Watchers</option>
+        <option value="forks">Forks</option>
+        <option value="commits">Commits</option>
+      </select>
+    </section>
+    <section id="filter-stats-by">
+      <label>Filter by Stat:</label>
+      <input type="checkbox" id="issues-check" value="issues" checked="checked">
+      <label for="issues-check">issues</label>
+      <input type="checkbox" id="watchers-check" value="watchers" checked="checked">
+      <label for="watchers-check">watchers</label>
+      <input type="checkbox" id="forks-check" value="forks" checked="checked">
+      <label for="forks-check">forks</label>
+      <input type="checkbox" id="commits-check" value="commits" checked="checked">
+      <label for="commits-check">commits</label>
+    </section>
+    <section id="filter-repos-by">
+      <label>Filter by Repository</label>
+    </section>
     <ul id="all-repos-info">
     </ul>
   </main>
