@@ -1,7 +1,7 @@
 (function() {
   var repositories = [
-    'facebook/react',
-    'angular/angular.js',
+    // 'facebook/react',
+    // 'angular/angular.js',
     'emberjs/ember.js',
     'vuejs/vue'
   ];
@@ -33,7 +33,7 @@
 
   sortSelect.addEventListener('change', addRepoInfo, false);
 
-  for(var i=0;i<1;i++) {
+  for(var i=0;i<0;i++) {
     (function(i){
       window.setTimeout(function(){
         loadAndDisplay();
@@ -105,14 +105,17 @@
     sort();
     document.querySelector('#all-repos-info').innerHTML = '';
     var mainUl = document.querySelector('#all-repos-info');
+    var rankNum = 1;
     for(var i=0;i<reposInfo.length ;i++) {
       if(reposDisplayOptions[reposInfo[i].name]) {
         var mainUlLi = document.createElement('li');
+        mainUlLi.className = 'card';
         mainUl.appendChild(mainUlLi);
         var ulStats = document.createElement('ul');
-        ulStats.className = 'card';
+        ulStats.className = 'stats';
         var repoName = document.createElement('h2');
-        repoName.innerHTML = reposInfo[i].name;
+        repoName.innerHTML = rankNum+'. '+reposInfo[i].name;
+        rankNum++;
         ulStats.appendChild(repoName);
         if (statsDisplayOptions.issues === true) {
           var openIssuesCount = document.createElement('li');
