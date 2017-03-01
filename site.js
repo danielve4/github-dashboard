@@ -1,8 +1,9 @@
 (function() {
+  var refreshInteval = 30; //In minutes
   var repositories = [
     // 'facebook/react',
     // 'angular/angular.js',
-    'emberjs/ember.js',
+    // 'emberjs/ember.js',
     'vuejs/vue'
   ];
   var sortSelect = document.getElementById('sort-select');
@@ -23,8 +24,6 @@
     method: 'GET',
     headers: {
       'Accept': 'application/vnd.github.v3+json'
-      //'User-Agent': 'danielve4'
-      ///'Authorization':'token '
     }
   };
 
@@ -33,11 +32,13 @@
 
   sortSelect.addEventListener('change', addRepoInfo, false);
 
-  for(var i=0;i<0;i++) {
+  for(var i=0;i<1;i++) {
     (function(i){
       window.setTimeout(function(){
         loadAndDisplay();
-      }, i * 5000);
+        var date = new Date();
+        document.getElementById('time-updated').innerHTML = date.getHours()+':'+date.getMinutes();
+      }, i * (1000 * 60 * refreshInteval ));
     }(i));
   }
 
@@ -157,7 +158,6 @@
     var repoLabel = document.createElement('label');
     repoLabel.setAttribute('for',repoName+'-check');
     repoLabel.innerHTML = repoName;
-    repoLi.appendChild(repoLabel);
     var repoCheck = document.createElement('input');
     repoCheck.setAttribute('type','checkbox');
     repoCheck.setAttribute('id',repoName+'-check');
@@ -168,6 +168,7 @@
       addRepoInfo();
     };
     repoLi.appendChild(repoCheck);
+    repoLi.appendChild(repoLabel);
     filterRepos.appendChild(repoLi);
   }
 
