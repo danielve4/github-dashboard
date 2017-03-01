@@ -6,8 +6,7 @@
     'vuejs/vue'
   ];
   var sortSelect = document.getElementById('sort-select');
-  var sortBy;
-  var displayOnly = {
+  var statsDisplayOptions = {
     'issues':true,
     'watchers':true,
     'forks':true,
@@ -24,6 +23,7 @@
   };
 
   var reposInfo;
+  var sortBy;
 
   function loadRepoInfo(repoPath, callback) {
     var repoUrl = 'http://api.github.com/repos/'+repoPath;
@@ -70,22 +70,22 @@
       var repoName = document.createElement('h2');
       repoName.innerHTML = reposInfo[i].name;
       ulStats.appendChild(repoName);
-      if (displayOnly.issues === true) {
+      if (statsDisplayOptions.issues === true) {
         var openIssuesCount = document.createElement('li');
         openIssuesCount.innerHTML = 'Open Issues: ' + reposInfo[i].issues;
         ulStats.appendChild(openIssuesCount);
       }
-      if (displayOnly.watchers === true) {
+      if (statsDisplayOptions.watchers === true) {
         var watchersCount = document.createElement('li');
         watchersCount.innerHTML = 'Watchers: ' + reposInfo[i].watchers;
         ulStats.appendChild(watchersCount);
       }
-      if (displayOnly.forks === true) {
+      if (statsDisplayOptions.forks === true) {
         var forksCount = document.createElement('li');
         forksCount.innerHTML = 'Forks: ' + reposInfo[i].forks;
         ulStats.appendChild(forksCount);
       }
-      if (displayOnly.commits === true) {
+      if (statsDisplayOptions.commits === true) {
         var commitCount = document.createElement('li');
         commitCount.innerHTML = 'Commits: ' + reposInfo[i].commits;
         ulStats.appendChild(commitCount);
@@ -126,6 +126,19 @@
   }
 
   sortSelect.addEventListener('change', addRepoInfo, false);
+  var filterStatsBy = document.getElementById('filter-stats-by');
+  var statsCheckBoxes = filterStatsBy.getElementsByTagName('input');
+
+  for (var c=0; c<statsCheckBoxes.length; c++) {
+    statsCheckBoxes[c].onclick = function() {
+      if(this.checked) {
+        statsDisplayOptions[this.value] = true;
+      } else {
+        statsDisplayOptions[this.value] = false;
+      }
+      addRepoInfo();
+    }
+  }
 
   function getRepoInfo(repoUrl, callback) {
     var repoRequest = new Request(repoUrl, requestOptions);
