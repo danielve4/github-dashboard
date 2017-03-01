@@ -19,6 +19,21 @@ html {
   font-weight: 500;
 }
 
+h1 {
+  font-size: 1.9531111em;  /*35.156px / 18px = 1.9531111em*/
+  line-height: 1.251564456em; /*44px gridline at 35.156px | 44px / 35.156px = 1.251564456em*/
+  font-weight: 500;
+  /*color: #FFFFFF;*/
+}
+
+h2 {
+  font-size: 1.5625em;     /*28.125px /18px = 1.5625em*/
+  line-height: 1.1733333em; /*33px = 1.5 gridline at 28.125px*/
+  /*padding-top: 0.78222222em; !*One gridline to top | 22px / 28.125px = 0.78222222em*!*/
+  /*padding-left: 0.782222222em;*/
+  font-weight: 600;
+}
+
 .card {
   margin-top: 0.61111111em; /*11px / 18px = 0.611111em*/
   border-radius: 0.18181818em; /*2px / 11px = 0.18181818em*/
@@ -27,10 +42,17 @@ html {
   background-color: #F9F9F9;
 }
 
+.checkboxes {
+  display: block;
+}
+
 #page {
   padding: 0.611111111em; /*half gridline*/
 }
 
+section {
+  padding-top: 1.222222em; /*One gridline, 22px*/
+}
 
 /* 480px @ 16px/em*/
 @media screen and (min-width: 30em) {
