@@ -62,7 +62,7 @@
   }
   //Gets the data from their respective urls
   function loadRepoInfo(repoPath, callback) {
-    var repoUrl = 'http://api.github.com/repos/'+repoPath;
+    var repoUrl = 'https://api.github.com/repos/'+repoPath;
     var readyCount = 0;
     var info = {
       'name':'',
