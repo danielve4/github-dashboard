@@ -22,15 +22,13 @@ html {
 h1 {
   font-size: 1.9531111em;  /*35.156px / 18px = 1.9531111em*/
   line-height: 1.251564456em; /*44px gridline at 35.156px | 44px / 35.156px = 1.251564456em*/
-  font-weight: 500;
-  /*color: #FFFFFF;*/
+  font-weight: 600;
 }
 
 h2 {
   font-size: 1.5625em;     /*28.125px /18px = 1.5625em*/
   line-height: 1.1733333em; /*33px = 1.5 gridline at 28.125px*/
-  /*padding-top: 0.78222222em; !*One gridline to top | 22px / 28.125px = 0.78222222em*!*/
-  /*padding-left: 0.782222222em;*/
+  padding-bottom: 0.39111111em; /*11px/28.125px*/
   font-weight: 600;
 }
 
@@ -42,16 +40,17 @@ h2 {
   background-color: #F9F9F9;
 }
 
-.checkboxes {
-  display: block;
-}
-
 #page {
   padding: 0.611111111em; /*half gridline*/
 }
 
 section {
   padding-top: 1.222222em; /*One gridline, 22px*/
+}
+
+footer {
+  clear: both;
+  padding-bottom: 2.4444444em;/*2 gridlines, 44px*/
 }
 
 /* 480px @ 16px/em*/
@@ -71,6 +70,24 @@ section {
     padding-left: 2.66667%;
     padding-right: 2.66667%;
   }
+
+  .card {
+    width: 40.84507042%; /*((600-48[gutters])/2)-44 = 232 | 232/600=40.845%*/
+  }
+
+  #all-repos-info > li:nth-child(odd) {
+    float: left;
+  }
+
+  #all-repos-info > li:nth-child(even) {
+    float: right;
+  }
+
+  .stats li {
+    overflow: hidden;
+    padding-top: 0.61111111em; /*11px / 18px = 0.611111em*/
+  }
+
 }
 
 /* 840px @ 16px/em*/
