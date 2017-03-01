@@ -10,6 +10,7 @@
 <div id="page">
   <header id="header">
     <h1>Github Dashboard</h1>
+    <p>Updated at: <span id="time-updated"></span></p>
   </header>
   <main id="content">
     <section id="sort-by">
@@ -25,20 +26,20 @@
       <label>Filter by Stat: </label>
       <ul id="filter-stats-by">
         <li>
-          <label for="issues-check">Open Issues</label>
           <input type="checkbox" id="issues-check" value="issues" checked="checked">
+          <label for="issues-check">Open Issues</label>
         </li>
         <li>
-          <label for="watchers-check">Watchers</label>
           <input type="checkbox" id="watchers-check" value="watchers" checked="checked">
+          <label for="watchers-check">Watchers</label>
         </li>
         <li>
-          <label for="forks-check">Forks</label>
           <input type="checkbox" id="forks-check" value="forks" checked="checked">
+          <label for="forks-check">Forks</label>
         </li>
         <li>
-          <label for="commits-check">Commits</label>
           <input type="checkbox" id="commits-check" value="commits" checked="checked">
+          <label for="commits-check">Commits</label>
         </li>
       </ul>
     </section>
@@ -52,7 +53,7 @@
       </ul>
     </section>
   </main>
-  <footer class="footer">
+  <footer>
   </footer>
 </div>
 <script src="./site.js"></script>
